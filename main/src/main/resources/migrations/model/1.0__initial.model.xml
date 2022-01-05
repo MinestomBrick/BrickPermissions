@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="groups" identityType="external" pkName="pk_groups">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="name" type="varchar"/>
+            <uniqueConstraint name="uq_groups_name" columnNames="name" oneToOne="false" nullableColumns="name"/>
+        </createTable>
+        <createTable name="group_permissions" pkName="pk_group_permissions">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="permission" type="varchar"/>
+            <column name="group_id" type="uuid" references="groups.id" foreignKeyName="fk_group_permissions_group_id" foreignKeyIndex="ix_group_permissions_group_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
+            <uniqueConstraint name="uq_group_permissions_group_id_permission" columnNames="group_id,permission" oneToOne="false" nullableColumns="group_id,permission"/>
+        </createTable>
+        <createTable name="player_groups" pkName="pk_player_groups">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="player_id" type="uuid"/>
+            <column name="group_id" type="uuid" references="groups.id" foreignKeyName="fk_player_groups_group_id" foreignKeyIndex="ix_player_groups_group_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
+            <uniqueConstraint name="uq_player_groups_player_id_group_id" columnNames="player_id,group_id" oneToOne="false" nullableColumns="player_id,group_id"/>
+        </createTable>
+        <createTable name="player_permissions" pkName="pk_player_permissions">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="permission" type="varchar"/>
+            <column name="player_id" type="uuid"/>
+            <uniqueConstraint name="uq_player_permissions_player_id_permission" columnNames="player_id,permission" oneToOne="false" nullableColumns="player_id,permission"/>
+        </createTable>
+    </changeSet>
+</migration>

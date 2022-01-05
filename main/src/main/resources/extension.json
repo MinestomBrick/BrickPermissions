@@ -1,0 +1,5 @@
+{
+  "entrypoint": "com.gufli.brickpermissions.BrickPermissions",
+  "name": "BrickPermissions",
+  "version": "1.0.0"
+}

@@ -1,0 +1,8 @@
+rootProject.name = 'BrickPermissions'
+
+include(
+	'api',
+	'main',
+	'scripts'
+)
+

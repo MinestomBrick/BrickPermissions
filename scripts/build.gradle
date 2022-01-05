@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(':main')
+
+    runtimeOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
+
+    implementation 'io.ebean:ebean:12.14.0'
+    implementation 'io.ebean:ebean-ddl-generator:12.14.0'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+}

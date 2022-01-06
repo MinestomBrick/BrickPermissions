@@ -75,6 +75,9 @@ public class BrickPermissionManager implements PermissionManager {
         // give group permissions
         playerGroups.stream().flatMap(pg -> pg.group.groupPermissons().stream()).forEach(gp ->
                 player.addPermission(new Permission(gp.permission(), gp.data())));
+
+        // refresh command conditions for new permissions
+        player.refreshCommands();
     }
 
     public void unload(@NotNull Player player) {

@@ -5,6 +5,8 @@ import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ForkJoinPool;
+
 public class PlayerJoinListener implements EventListener<PlayerSpawnEvent> {
 
     private final BrickPermissionManager manager;
@@ -20,7 +22,9 @@ public class PlayerJoinListener implements EventListener<PlayerSpawnEvent> {
 
     @Override
     public @NotNull Result run(@NotNull PlayerSpawnEvent event) {
-        manager.load(event.getPlayer());
+        ForkJoinPool.commonPool().submit(() -> {
+            manager.load(event.getPlayer());
+        });
         return Result.SUCCESS;
     }
 }

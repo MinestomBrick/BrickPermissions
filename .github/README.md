@@ -1,7 +1,8 @@
 # BrickPermissions
 
-An extension for [Minestom](https://github.com/Minestom/Minestom) to permissions for players.
-Players can have individual permissions or can be assigned to a group with permissions.
+An extension for [Minestom](https://github.com/Minestom/Minestom) to manage the permissions of players.
+Players can have individual permissions or can be assigned to a group with permissions. The data can be stored in a 
+database server or a local H2 file database.
 
 ## Install
 

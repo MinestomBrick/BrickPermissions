@@ -1,4 +1,4 @@
-name: Build and upload artifact
+name: Test, build and upload artifact
 
 on:
   push:
@@ -7,8 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
-
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +17,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Executing permissions for graddle
+          run: 'chmod +x gradlew'
+
+      - name: Test with Gradle
+          run: './gradlew test'
+
       - name: Build with Gradle
-          run: ./gradlew build
+          run: './gradlew shadowJar'
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Brick
-          path: build/libs/BrickPermissions-*.jar
+          path: 'build/libs/BrickPermissions-*.jar'
           if-no-files-found: 'error'

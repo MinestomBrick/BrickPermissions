@@ -146,7 +146,7 @@ public class PermissionManagerTest {
         permissionManager.addPermission(group.get(), permission).get();
 
         // add & check local
-        permissionManager.addGroup(player, group.get());
+        permissionManager.addGroup(player, group.get()).get();
         assertTrue(permissionManager.groups(player).contains(group.get()));
         assertTrue(player.hasPermission(permission));
 
@@ -161,7 +161,7 @@ public class PermissionManagerTest {
         assertTrue(player.hasPermission(permission));
 
         // remove & check local
-        permissionManager.removeGroup(player, group.get());
+        permissionManager.removeGroup(player, group.get()).get();
         assertFalse(permissionManager.groups(player).contains(group.get()));
         assertFalse(player.hasPermission(permission));
 
@@ -183,11 +183,11 @@ public class PermissionManagerTest {
 
         Optional<Group> group = Optional.of(permissionManager.addGroup(GROUP_NAME).get());
         permissionManager.addPermission(group.get(), permission).get();
-        permissionManager.addGroup(player, group.get());
+        permissionManager.addGroup(player, group.get()).get();
         assertTrue(player.hasPermission(permission));
 
         // remove & check local
-        permissionManager.removeGroup(group.get());
+        permissionManager.removeGroup(group.get()).get();
         assertFalse(player.hasPermission(permission));
 
         // reload cache

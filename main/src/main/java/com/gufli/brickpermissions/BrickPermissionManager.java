@@ -13,8 +13,6 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.permission.Permission;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -23,12 +21,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BrickPermissionManager implements PermissionManager {
-
-    public final static Logger LOGGER = LoggerFactory.getLogger(BrickPermissionManager.class);
 
     private final DatabaseContext databaseContext;
 
@@ -39,15 +34,23 @@ public class BrickPermissionManager implements PermissionManager {
 
     public BrickPermissionManager(DatabaseContext databaseContext) {
         this.databaseContext = databaseContext;
-
-        // load groups
-        groups.addAll(new QBGroup().findSet());
+        reload();
     }
 
     void shutdown() {
         groups.clear();
         players.clear();
         playerGroups.clear();
+    }
+
+    void reload() {
+        shutdown();
+
+        // load groups
+        groups.addAll(new QBGroup().findSet());
+
+        // load players
+        MinecraftServer.getConnectionManager().getOnlinePlayers().forEach(this::load);
     }
 
     public void load(@NotNull Player player) {
@@ -70,7 +73,7 @@ public class BrickPermissionManager implements PermissionManager {
         playerPerms.forEach(pp -> player.addPermission(new Permission(pp.permission(), pp.data())));
 
         // give group permissions
-        playerGroups.stream().flatMap(pg -> pg.group.permissions().stream()).forEach(gp ->
+        playerGroups.stream().flatMap(pg -> pg.group.groupPermissons().stream()).forEach(gp ->
                 player.addPermission(new Permission(gp.permission(), gp.data())));
     }
 
@@ -80,33 +83,6 @@ public class BrickPermissionManager implements PermissionManager {
     }
 
     // INTERNAL API
-
-    private CompletableFuture<Void> async(Runnable runnable) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        MinecraftServer.getSchedulerManager().getBatchesPool().submit(() -> {
-            try {
-                runnable.run();
-                future.complete(null);
-            } catch (Exception ex) {
-                LOGGER.error(ex.getMessage(), ex);
-                future.completeExceptionally(ex);
-            }
-        });
-        return future;
-    }
-
-    private <T> CompletableFuture<T> async(Supplier<T> supplier) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-        MinecraftServer.getSchedulerManager().getBatchesPool().submit(() -> {
-            try {
-                future.complete(supplier.get());
-            } catch (Exception ex) {
-                LOGGER.error(ex.getMessage(), ex);
-                future.completeExceptionally(ex);
-            }
-        });
-        return future;
-    }
 
     private Optional<BPlayerPermission> permissionByName(@NotNull Player player, @NotNull String permission) {
         return players.get(player).stream()
@@ -118,18 +94,20 @@ public class BrickPermissionManager implements PermissionManager {
 
     @Override
     public CompletableFuture<Void> addPermission(@NotNull Player player, @NotNull Permission permission) {
+        // add to local player
         player.addPermission(permission);
 
+        // add to/update database
         Optional<BPlayerPermission> bpp = permissionByName(player, permission.getPermissionName());
         if ( bpp.isPresent() ) {
             bpp.get().setData(permission.getNBTData());
-            return async(() -> bpp.get().save());
+            return databaseContext.saveAsync(bpp.get());
         }
 
         BPlayerPermission perm = new BPlayerPermission(player.getUuid(),
                 permission.getPermissionName(), permission.getNBTData());
         players.get(player).add(perm);
-        return async((Runnable) perm::save);
+        return databaseContext.saveAsync(perm);
     }
 
     @Override
@@ -139,17 +117,17 @@ public class BrickPermissionManager implements PermissionManager {
 
     @Override
     public CompletableFuture<Void> removePermission(Player player, Permission permission) {
+        // remove from local player
         player.removePermission(permission);
 
+        // remove from database
         Optional<BPlayerPermission> bpp = permissionByName(player, permission.getPermissionName());
         if ( bpp.isEmpty() ) {
             return CompletableFuture.completedFuture(null);
         }
 
         players.get(player).remove(bpp.get());
-        return async(() -> {
-            bpp.get().delete();
-        });
+        return databaseContext.deleteAsync(bpp.get());
     }
 
     @Override
@@ -181,29 +159,34 @@ public class BrickPermissionManager implements PermissionManager {
         if ( group(name).isPresent() )
             throw new IllegalArgumentException("A group with that name already exists.");
 
+        // add to local cache
         BGroup group = new BGroup(name);
         groups.add(group);
 
-        return async(() -> {
-            group.save();
-            return group;
-        });
+        // add to database
+        return databaseContext.saveAsync(group).thenApply((v) -> group);
     }
 
     @Override
     public CompletableFuture<Void> removeGroup(Group group) {
+        // remove from local cache
         BGroup bgroup = (BGroup) group;
         groups.remove(bgroup);
 
         playerGroups.forEach((key, value) -> {
+            // remove player groups linked to this group
             Optional<BPlayerGroup> bpg = value.stream()
                     .filter(pg -> pg.group.name().equals(group.name()))
                     .findFirst();
             bpg.ifPresent(value::remove);
+
+            // remove permissions of player group
+            bpg.ifPresent((pg) -> pg.group.permissions().forEach(key::removePermission));
         });
 
-        // player group should be removed from database by constraints
-        return async((Runnable) bgroup::delete);
+        // remove from database
+        // player group should also be removed from database by constraints
+        return databaseContext.deleteAsync(bgroup);
     }
 
     @Override
@@ -215,9 +198,15 @@ public class BrickPermissionManager implements PermissionManager {
             return CompletableFuture.completedFuture(null);
         }
 
+        // add permissions to local player
+        group.permissions().forEach(player::addPermission);
+
+        // add to cache
         BPlayerGroup pg = new BPlayerGroup(player.getUuid(), (BGroup) group);
         playerGroups.get(player).add(pg);
-        return async((Runnable) pg::save);
+
+        // add to database
+        return databaseContext.saveAsync(pg);
     }
 
     @Override
@@ -229,31 +218,37 @@ public class BrickPermissionManager implements PermissionManager {
             return CompletableFuture.completedFuture(null);
         }
 
-        bpg.get().group.permissions().forEach(perm ->
+        // remove permissions from local player
+        bpg.get().group.groupPermissons().forEach(perm ->
                 player.removePermission(perm.permission()));
 
+        // remove from cache
         playerGroups.get(player).remove(bpg.get());
-        return async(() -> {
-            bpg.get().delete();
-        });
+
+        // remove from database
+        return databaseContext.deleteAsync(bpg.get());
     }
 
     @Override
     public CompletableFuture<Void> addPermission(Group group, Permission permission) {
         BGroup bgroup = (BGroup) group;
         Optional<BGroupPermission> bgp = bgroup.permissionByName(permission.getPermissionName());
-        if ( bgp.isPresent() ) {
-            bgp.get().setData(permission.getNBTData());
-            return async(() -> bgp.get().save());
-        }
 
+        // add permission to local players
         playerGroups.entrySet().stream().filter(entry -> entry.getValue().stream()
-                .anyMatch(pg -> pg.group.name().equals(group.name())))
+                        .anyMatch(pg -> pg.group.name().equals(group.name())))
                 .findAny().map(Map.Entry::getKey)
                 .ifPresent(p -> p.addPermission(permission));
 
+        // update database
+        if ( bgp.isPresent() ) {
+            bgp.get().setData(permission.getNBTData());
+            return databaseContext.saveAsync(bgp.get());
+        }
+
+        // add to database
         BGroupPermission gp = bgroup.addPermission(permission);
-        return async((Runnable) gp::save);
+        return databaseContext.saveAsync(gp);
     }
 
     @Override
@@ -269,12 +264,14 @@ public class BrickPermissionManager implements PermissionManager {
             return CompletableFuture.completedFuture(null);
         }
 
+        // remove permission from local players
         playerGroups.entrySet().stream().filter(entry -> entry.getValue().stream()
                         .anyMatch(pg -> pg.group.name().equals(group.name())))
                 .findAny().map(Map.Entry::getKey)
                 .ifPresent(p -> p.removePermission(permission.getPermissionName()));
 
-        return async(() -> bgp.get().save());
+        // remove from database
+        return databaseContext.deleteAsync(bgp.get());
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.gufli.brickpermissions.data.converters;
 
 import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 import org.jglrxavpok.hephaistos.nbt.NBTException;
-import org.jglrxavpok.hephaistos.nbt.SNBTParser;
+import org.jglrxavpok.hephaistos.parser.SNBTParser;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

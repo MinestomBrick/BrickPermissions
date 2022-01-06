@@ -2,6 +2,7 @@ package com.gufli.brickpermissions;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.gufli.brickpermissions.commands.BrickPermissionRootCommand;
 import com.gufli.brickpermissions.data.DatabaseContext;
 import com.gufli.brickpermissions.listeners.PlayerJoinListener;
 import com.gufli.brickpermissions.listeners.PlayerQuitListener;
@@ -69,6 +70,7 @@ public class BrickPermissions extends Extension {
         eventListeners.forEach(geh::addListener);
 
         // COMMANDS
+        commands.add(new BrickPermissionRootCommand(permissionManager));
 
         CommandManager gm = MinecraftServer.getCommandManager();
         commands.forEach(gm::register);

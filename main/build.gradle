@@ -13,15 +13,27 @@ jar {
 dependencies {
     implementation project(':api')
 
-    compileOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
+    compileOnly 'com.github.Minestom:Minestom:1.18-SNAPSHOT'
 
-    implementation 'io.ebean:ebean:12.14.0'
-    implementation 'io.ebean:ebean-ddl-generator:12.14.0'
-    implementation 'io.ebean:ebean-querybean:12.14.0'
+    compileOnly 'io.ebean:ebean:12.14.0'
+    compileOnly 'io.ebean:ebean-ddl-generator:12.14.0'
+    compileOnly 'io.ebean:ebean-querybean:12.14.0'
     annotationProcessor 'io.ebean:querybean-generator:12.14.0'
 
-    implementation 'mysql:mysql-connector-java:8.0.27'
-    implementation 'com.h2database:h2:2.0.204'
+    // TESTING
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.1')
+
+    testImplementation 'com.github.Minestom:Minestom:-SNAPSHOT'
+    testImplementation 'io.ebean:ebean:12.14.0'
+    testImplementation 'io.ebean:ebean-ddl-generator:12.14.0'
+    testImplementation 'io.ebean:ebean-querybean:12.14.0'
+    testImplementation 'com.h2database:h2:2.0.204'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 shadowJar {
@@ -32,7 +44,7 @@ shadowJar {
     doLast {
         copy {
             from "build/libs/" + archiveFileName.get()
-            into "../../Brick/extensions"
+            into "../../server/extensions"
         }
     }
 }

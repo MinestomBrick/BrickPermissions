@@ -5,10 +5,8 @@ import io.ebean.annotation.Index;
 import net.minestom.server.permission.Permission;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Index(unique = true, columnNames = { "name" })
@@ -34,13 +32,21 @@ public class BGroup extends BModel implements Group {
         return name;
     }
 
+    @Override
+    public Collection<Permission> permissions() {
+        return permissions.stream().map(gp -> new Permission(gp.permission(), gp.data()))
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
     public Optional<BGroupPermission> permissionByName(String name) {
         return permissions.stream()
                 .filter(perm -> perm.permission().equalsIgnoreCase(name))
                 .findFirst();
     }
 
-    public List<BGroupPermission> permissions() {
+
+
+    public List<BGroupPermission> groupPermissons() {
         return Collections.unmodifiableList(permissions);
     }
 

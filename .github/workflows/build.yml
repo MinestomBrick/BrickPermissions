@@ -18,13 +18,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Executing permissions for graddle
-          run: 'chmod +x gradlew'
+        run: 'chmod +x gradlew'
 
       - name: Test with Gradle
-          run: './gradlew test'
+        run: './gradlew test'
 
       - name: Build with Gradle
-          run: './gradlew shadowJar'
+        run: './gradlew shadowJar'
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:

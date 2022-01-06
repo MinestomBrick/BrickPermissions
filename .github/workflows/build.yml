@@ -25,9 +25,10 @@ jobs:
 
       - name: Build with Gradle
         run: './gradlew shadowJar'
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Brick
-          path: 'build/libs/BrickPermissions-*.jar'
+          path: 'main/build/libs/BrickPermissions-*.jar'
           if-no-files-found: 'error'

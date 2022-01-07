@@ -2,7 +2,7 @@ rootProject.name = 'BrickPermissions'
 
 include(
 	'api',
-	'main',
+	'app',
 	'scripts'
 )
 

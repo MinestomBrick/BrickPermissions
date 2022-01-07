@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation project(':main')
+    implementation project(':app')
 
     runtimeOnly 'com.github.Minestom:Minestom:1.18-SNAPSHOT'
 

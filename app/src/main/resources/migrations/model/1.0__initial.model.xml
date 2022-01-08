@@ -9,6 +9,7 @@
         <createTable name="group_permissions" pkName="pk_group_permissions">
             <column name="id" type="integer" primaryKey="true"/>
             <column name="permission" type="varchar"/>
+            <column name="data" type="varchar"/>
             <column name="group_id" type="uuid" references="groups.id" foreignKeyName="fk_group_permissions_group_id" foreignKeyIndex="ix_group_permissions_group_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
             <uniqueConstraint name="uq_group_permissions_group_id_permission" columnNames="group_id,permission" oneToOne="false" nullableColumns="group_id,permission"/>
         </createTable>
@@ -21,8 +22,11 @@
         <createTable name="player_permissions" pkName="pk_player_permissions">
             <column name="id" type="integer" primaryKey="true"/>
             <column name="permission" type="varchar"/>
+            <column name="data" type="varchar"/>
             <column name="player_id" type="uuid"/>
             <uniqueConstraint name="uq_player_permissions_player_id_permission" columnNames="player_id,permission" oneToOne="false" nullableColumns="player_id,permission"/>
         </createTable>
+        <createIndex indexName="ix_player_groups_player_id" tableName="player_groups" columns="player_id"/>
+        <createIndex indexName="ix_player_permissions_player_id" tableName="player_permissions" columns="player_id"/>
     </changeSet>
 </migration>

@@ -9,6 +9,7 @@ create table groups (
 create table group_permissions (
   id                            integer auto_increment not null,
   permission                    varchar(255),
+  data                          varchar(255),
   group_id                      varchar(40),
   constraint uq_group_permissions_group_id_permission unique (group_id,permission),
   constraint pk_group_permissions primary key (id)
@@ -25,11 +26,14 @@ create table player_groups (
 create table player_permissions (
   id                            integer auto_increment not null,
   permission                    varchar(255),
+  data                          varchar(255),
   player_id                     varchar(40),
   constraint uq_player_permissions_player_id_permission unique (player_id,permission),
   constraint pk_player_permissions primary key (id)
 );
 
+create index ix_player_groups_player_id on player_groups (player_id);
+create index ix_player_permissions_player_id on player_permissions (player_id);
 create index ix_group_permissions_group_id on group_permissions (group_id);
 alter table group_permissions add constraint fk_group_permissions_group_id foreign key (group_id) references groups (id) on delete cascade on update restrict;
 

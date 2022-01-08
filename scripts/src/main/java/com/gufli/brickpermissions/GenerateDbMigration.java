@@ -20,7 +20,7 @@ public class GenerateDbMigration {
         DbMigration dbMigration = DbMigration.create();
         dbMigration.addPlatform(Platform.H2, "h2");
         dbMigration.addPlatform(Platform.MYSQL, "mysql");
-        dbMigration.setPathToResources("../BrickPermissions/main/src/main/resources");
+        dbMigration.setPathToResources("BrickPermissions/app/src/main/resources");
         dbMigration.setMigrationPath("migrations");
 
         // create mock db with same name as used in the app

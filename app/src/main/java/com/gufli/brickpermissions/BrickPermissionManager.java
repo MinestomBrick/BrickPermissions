@@ -1,6 +1,6 @@
 package com.gufli.brickpermissions;
 
-import com.gufli.brickpermissions.data.DatabaseContext;
+import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
 import com.gufli.brickpermissions.data.Group;
 import com.gufli.brickpermissions.data.beans.BGroup;
 import com.gufli.brickpermissions.data.beans.BGroupPermission;
@@ -25,14 +25,14 @@ import java.util.stream.Collectors;
 
 public class BrickPermissionManager implements PermissionManager {
 
-    private final DatabaseContext databaseContext;
+    private final BrickPermissionsDatabaseContext databaseContext;
 
     private final Set<BGroup> groups = new CopyOnWriteArraySet<>();
 
     private final Map<Player, Set<BPlayerPermission>> players = new ConcurrentHashMap<>();
     private final Map<Player, Set<BPlayerGroup>> playerGroups = new ConcurrentHashMap<>();
 
-    public BrickPermissionManager(DatabaseContext databaseContext) {
+    public BrickPermissionManager(BrickPermissionsDatabaseContext databaseContext) {
         this.databaseContext = databaseContext;
         reload();
     }

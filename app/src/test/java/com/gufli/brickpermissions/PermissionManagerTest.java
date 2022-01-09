@@ -1,6 +1,6 @@
 package com.gufli.brickpermissions;
 
-import com.gufli.brickpermissions.data.DatabaseContext;
+import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
 import com.gufli.brickpermissions.data.Group;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
@@ -30,7 +30,7 @@ public class PermissionManagerTest {
 
         // init memory database
         try {
-            DatabaseContext databaseContext = new DatabaseContext();
+            BrickPermissionsDatabaseContext databaseContext = new BrickPermissionsDatabaseContext();
             databaseContext.init("jdbc:h2:mem:migrationdb;", "dbuser", "");
             permissionManager = new BrickPermissionManager(databaseContext);
         } catch (SQLException ex) {

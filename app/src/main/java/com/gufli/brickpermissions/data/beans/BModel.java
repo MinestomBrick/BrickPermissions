@@ -1,17 +1,18 @@
 package com.gufli.brickpermissions.data.beans;
 
-import com.gufli.brickpermissions.data.DatabaseContext;
+import com.gufli.brickdatabase.BaseModel;
+import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
 import io.ebean.Model;
 import io.ebean.annotation.DbName;
 
 import javax.persistence.MappedSuperclass;
 
-@DbName(DatabaseContext.DATASOURCE_NAME)
+@DbName(BrickPermissionsDatabaseContext.DATASOURCE_NAME)
 @MappedSuperclass
-public class BModel extends Model {
+public class BModel extends Model implements BaseModel {
 
     public BModel() {
-        super(DatabaseContext.DATASOURCE_NAME);
+        super(BrickPermissionsDatabaseContext.DATASOURCE_NAME);
     }
 
 }

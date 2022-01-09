@@ -3,7 +3,7 @@ package com.gufli.brickpermissions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.gufli.brickpermissions.commands.BrickPermissionRootCommand;
-import com.gufli.brickpermissions.data.DatabaseContext;
+import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
 import com.gufli.brickpermissions.listeners.PlayerJoinListener;
 import com.gufli.brickpermissions.listeners.PlayerQuitListener;
 import net.minestom.server.MinecraftServer;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class BrickPermissions extends Extension {
 
-    private DatabaseContext databaseContext;
+    private BrickPermissionsDatabaseContext databaseContext;
     private BrickPermissionManager permissionManager;
 
     private final Set<Command> commands = new HashSet<>();
@@ -47,7 +47,7 @@ public class BrickPermissions extends Extension {
             JsonObject config = JsonParser.parseReader(isr).getAsJsonObject();
             config = config.get("database").getAsJsonObject();
 
-            databaseContext = new DatabaseContext();
+            databaseContext = new BrickPermissionsDatabaseContext();
             databaseContext.init(
                     config.get("dsn").getAsString(),
                     config.get("username").getAsString(),
@@ -95,7 +95,7 @@ public class BrickPermissions extends Extension {
 
         // DATABASE
         if ( databaseContext != null ) {
-            databaseContext.shutdownServer();
+            databaseContext.shutdown();
         }
 
         getLogger().info("Disabled " + nameAndVersion() + ".");

@@ -76,6 +76,15 @@ public class BrickPermissionManager implements PermissionManager {
         playerGroups.stream().flatMap(pg -> pg.group.groupPermissons().stream()).forEach(gp ->
                 player.addPermission(new Permission(gp.permission(), gp.data())));
 
+        refresh(player);
+    }
+
+    private void refresh(Player player) {
+        // equivalent with operator
+        if ( player.hasPermission("*") ) {
+            player.setPermissionLevel(4);
+        }
+
         // refresh command conditions for new permissions
         player.refreshCommands();
     }
@@ -99,7 +108,7 @@ public class BrickPermissionManager implements PermissionManager {
     public CompletableFuture<Void> addPermission(@NotNull Player player, @NotNull Permission permission) {
         // add to local player
         player.addPermission(permission);
-        player.refreshCommands();
+        refresh(player);
 
         // add to/update database
         Optional<BPlayerPermission> bpp = permissionByName(player, permission.getPermissionName());
@@ -123,7 +132,7 @@ public class BrickPermissionManager implements PermissionManager {
     public CompletableFuture<Void> removePermission(Player player, Permission permission) {
         // remove from local player
         player.removePermission(permission);
-        player.refreshCommands();
+        refresh(player);
 
         // remove from database
         Optional<BPlayerPermission> bpp = permissionByName(player, permission.getPermissionName());
@@ -178,16 +187,16 @@ public class BrickPermissionManager implements PermissionManager {
         BGroup bgroup = (BGroup) group;
         groups.remove(bgroup);
 
-        playerGroups.forEach((key, value) -> {
+        playerGroups.forEach((player, permissionList) -> {
             // remove player groups linked to this group
-            Optional<BPlayerGroup> bpg = value.stream()
+            Optional<BPlayerGroup> bpg = permissionList.stream()
                     .filter(pg -> pg.group.name().equals(group.name()))
                     .findFirst();
 
             if ( bpg.isPresent() ) {
-                value.remove(bpg.get());
-                bpg.get().group.permissions().forEach(key::removePermission);
-                key.refreshCommands();
+                permissionList.remove(bpg.get());
+                bpg.get().group.permissions().forEach(player::removePermission);
+                refresh(player);
             }
         });
 
@@ -207,7 +216,7 @@ public class BrickPermissionManager implements PermissionManager {
 
         // add permissions to local player
         group.permissions().forEach(player::addPermission);
-        player.refreshCommands();
+        refresh(player);
 
         // add to cache
         BPlayerGroup pg = new BPlayerGroup(player.getUuid(), (BGroup) group);
@@ -229,7 +238,7 @@ public class BrickPermissionManager implements PermissionManager {
         // remove permissions from local player
         bpg.get().group.groupPermissons().forEach(perm ->
                 player.removePermission(perm.permission()));
-        player.refreshCommands();
+        refresh(player);
 
         // remove from cache
         playerGroups.get(player).remove(bpg.get());
@@ -249,7 +258,7 @@ public class BrickPermissionManager implements PermissionManager {
                 .findAny().map(Map.Entry::getKey)
                 .ifPresent(p -> {
                     p.addPermission(permission);
-                    p.refreshCommands();
+                   refresh(p);
                 });
 
         // update database
@@ -282,7 +291,7 @@ public class BrickPermissionManager implements PermissionManager {
                 .findAny().map(Map.Entry::getKey)
                 .ifPresent(p -> {
                     p.removePermission(permission.getPermissionName());
-                    p.refreshCommands();
+                    refresh(p);
                 });
 
         // remove from database

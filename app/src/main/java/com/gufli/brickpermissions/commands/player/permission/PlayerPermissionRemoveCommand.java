@@ -25,8 +25,10 @@ public class PlayerPermissionRemoveCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition(((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.player.permission.remove")));
+        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
+                sender.hasPermission("brickpermissions.player.permission.remove")  ||
+                (sender instanceof Player p && p.getPermissionLevel() == 4)
+        );
 
         // usage
         setDefaultExecutor((sender, context) -> {

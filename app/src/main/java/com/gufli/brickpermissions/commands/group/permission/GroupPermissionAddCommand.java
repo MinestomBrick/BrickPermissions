@@ -10,6 +10,7 @@ import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.minestom.server.command.builder.arguments.minecraft.ArgumentNbtCompoundTag;
+import net.minestom.server.entity.Player;
 import net.minestom.server.permission.Permission;
 import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 
@@ -24,8 +25,9 @@ public class GroupPermissionAddCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition(((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.group.permission.add")));
+        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
+                sender.hasPermission("brickpermissions.group.permission.add") ||
+                (sender instanceof Player p && p.getPermissionLevel() == 4));
 
         // usage
         setDefaultExecutor((sender, context) -> {

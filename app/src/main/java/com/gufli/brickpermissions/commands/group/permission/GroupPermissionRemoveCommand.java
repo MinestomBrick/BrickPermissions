@@ -9,6 +9,7 @@ import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
+import net.minestom.server.entity.Player;
 
 import java.util.Optional;
 
@@ -21,8 +22,9 @@ public class GroupPermissionRemoveCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition(((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.group.permission.remove")));
+        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
+                sender.hasPermission("brickpermissions.group.permission.remove") ||
+                (sender instanceof Player p && p.getPermissionLevel() == 4));
 
         // usage
         setDefaultExecutor((sender, context) -> {

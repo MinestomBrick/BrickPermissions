@@ -9,6 +9,7 @@ import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
+import net.minestom.server.entity.Player;
 import net.minestom.server.permission.Permission;
 
 import java.util.Optional;
@@ -23,8 +24,9 @@ public class GroupAddCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition(((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.group.add")));
+        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
+                sender.hasPermission("brickpermissions.group.add") ||
+                (sender instanceof Player p && p.getPermissionLevel() == 4));
 
         // usage
         setDefaultExecutor((sender, context) -> {

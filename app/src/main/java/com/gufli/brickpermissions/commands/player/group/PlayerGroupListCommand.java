@@ -24,8 +24,10 @@ public class PlayerGroupListCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition(((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.player.group.list")));
+        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
+                sender.hasPermission("brickpermissions.player.group.list") ||
+                (sender instanceof Player p && p.getPermissionLevel() == 4)
+        );
 
         // usage
         setDefaultExecutor((sender, context) -> {

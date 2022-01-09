@@ -25,8 +25,9 @@ public class GroupInfoCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition(((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.group.info")));
+        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
+                sender.hasPermission("brickpermissions.group.info") ||
+                (sender instanceof Player p && p.getPermissionLevel() == 4));
 
         // usage
         setDefaultExecutor((sender, context) -> {

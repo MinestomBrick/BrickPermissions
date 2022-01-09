@@ -3,7 +3,6 @@ package com.gufli.brickpermissions.data;
 import com.gufli.brickdatabase.DatabaseContext;
 import com.gufli.brickpermissions.data.beans.*;
 import com.gufli.brickpermissions.data.converters.NBTConverter;
-import io.ebean.DatabaseFactory;
 import io.ebean.config.DatabaseConfig;
 
 public class BrickPermissionsDatabaseContext extends DatabaseContext {
@@ -25,8 +24,6 @@ public class BrickPermissionsDatabaseContext extends DatabaseContext {
         config.addClass(BGroupPermission.class);
         config.addClass(BPlayerGroup.class);
         config.addClass(BPlayerPermission.class);
-
-        DatabaseFactory.create(config);
     }
 
 }

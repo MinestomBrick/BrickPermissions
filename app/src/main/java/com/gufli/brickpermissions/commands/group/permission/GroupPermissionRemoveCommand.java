@@ -2,18 +2,15 @@ package com.gufli.brickpermissions.commands.group.permission;
 
 import com.gufli.brickpermissions.BrickPermissionManager;
 import com.gufli.brickpermissions.data.Group;
-import net.kyori.adventure.text.Component;
+import com.gufli.brickutils.commands.BrickCommand;
+import com.gufli.brickutils.translation.TranslationManager;
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.ConsoleSender;
-import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.CommandContext;
+import net.minestom.server.command.builder.arguments.ArgumentGroup;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
-import net.minestom.server.entity.Player;
 
-import java.util.Optional;
-
-public class GroupPermissionRemoveCommand extends Command {
+public class GroupPermissionRemoveCommand extends BrickCommand {
 
     private final BrickPermissionManager permissionManager;
 
@@ -22,34 +19,27 @@ public class GroupPermissionRemoveCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.group.permission.remove") ||
-                (sender instanceof Player p && p.getPermissionLevel() == 4));
+        setCondition(b -> b.permission("brickpermissions.group.permission.remove"));
 
         // usage
-        setDefaultExecutor((sender, context) -> {
-            sender.sendMessage("Usage: /bp group permission remove <group> <permission>");
-        });
+        setInvalidUsageMessage("cmd.group.permission.remove.usage");
 
         // arguments
-        ArgumentWord group = ArgumentType.Word("group");
+        ArgumentGroup group = new ArgumentGroup("group");
+        setInvalidArgumentMessage(group, "cmd.error.args.group");
+
         ArgumentWord permission = ArgumentType.Word("permission");
 
         addSyntax(this::execute, group, permission);
     }
 
     private void execute(CommandSender sender, CommandContext context) {
-        String groupName = context.get("group");
-        Optional<Group> group = permissionManager.group(groupName);
-        if (group.isEmpty()) {
-            sender.sendMessage(Component.text("The group " + groupName + " does not exist.")); // TODO
-            return;
-        }
+        Group group = context.get("group");
 
         String permission = context.get("permission");
-        permissionManager.removePermission(group.get(), permission);
+        permissionManager.removePermission(group, permission);
 
-        sender.sendMessage("Removed permission " + permission + " from " + group.get().name() + ". ");
+        TranslationManager.get().send(sender, "cmd.group.permission.remove", permission, group.name());
     }
 
 }

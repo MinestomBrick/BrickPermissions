@@ -2,21 +2,18 @@ package com.gufli.brickpermissions.commands.group.permission;
 
 import com.gufli.brickpermissions.BrickPermissionManager;
 import com.gufli.brickpermissions.data.Group;
-import net.kyori.adventure.text.Component;
+import com.gufli.brickutils.commands.BrickCommand;
+import com.gufli.brickutils.translation.TranslationManager;
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.ConsoleSender;
-import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.CommandContext;
+import net.minestom.server.command.builder.arguments.ArgumentGroup;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.minestom.server.command.builder.arguments.minecraft.ArgumentNbtCompoundTag;
-import net.minestom.server.entity.Player;
 import net.minestom.server.permission.Permission;
 import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 
-import java.util.Optional;
-
-public class GroupPermissionAddCommand extends Command {
+public class GroupPermissionAddCommand extends BrickCommand {
 
     private final BrickPermissionManager permissionManager;
 
@@ -25,17 +22,15 @@ public class GroupPermissionAddCommand extends Command {
         this.permissionManager = permissionManager;
 
         // conditions
-        setCondition((sender, commandString) -> sender instanceof ConsoleSender ||
-                sender.hasPermission("brickpermissions.group.permission.add") ||
-                (sender instanceof Player p && p.getPermissionLevel() == 4));
+        setCondition(b -> b.permission("brickpermissions.group.permission.add"));
 
         // usage
-        setDefaultExecutor((sender, context) -> {
-            sender.sendMessage("Usage: /bp group permission add <group> <permission>");
-        });
+        setInvalidUsageMessage("cmd.group.permission.add.usage");
 
         // arguments
-        ArgumentWord group = ArgumentType.Word("group");
+        ArgumentGroup group = new ArgumentGroup("group");
+        setInvalidArgumentMessage(group, "cmd.error.args.group");
+
         ArgumentWord permission = ArgumentType.Word("permission");
         ArgumentNbtCompoundTag data = ArgumentType.NbtCompound("data");
 
@@ -44,18 +39,13 @@ public class GroupPermissionAddCommand extends Command {
     }
 
     private void execute(CommandSender sender, CommandContext context) {
-        String groupName = context.get("group");
-        Optional<Group> group = permissionManager.group(groupName);
-        if (group.isEmpty()) {
-            sender.sendMessage(Component.text("The group " + groupName + " does not exist.")); // TODO
-            return;
-        }
+        Group group = context.get("group");
 
         String permission = context.get("permission");
         NBTCompound data = context.getOrDefault("data", null);
 
-        permissionManager.addPermission(group.get(), new Permission(permission, data));
-        sender.sendMessage("Added permission " + permission + " to " + group.get().name() + ". ");
+        permissionManager.addPermission(group, new Permission(permission, data));
+        TranslationManager.get().send(sender, "cmd.group.permission.add", permission, group.name());
     }
 
 }

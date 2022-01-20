@@ -7,9 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  test-and-build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
@@ -17,18 +16,39 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Executing permissions for graddle
-        run: 'chmod +x gradlew'
-
       - name: Test with Gradle
-        run: './gradlew test'
+          run: './gradlew test'
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Build with Gradle
         run: './gradlew shadowJar'
-
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: BrickPermissions
           path: 'app/build/libs/BrickPermissions-*.jar'
           if-no-files-found: 'error'
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Publish package
+          uses: gradle/gradle-build-action@v2
+          with:
+            arguments: publish
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,43 @@
+{
+  "cmd.error.permission": "You don't have permission for this command.",
+  "cmd.error.player-only": "This command can only be executed by a player.",
+  "cmd.error.console-only": "This command can only be executed by the console.",
+
+  "cmd.error.args": "{1} is not a valid {0}.",
+  "cmd.error.args.player": "The player {0} is not online.",
+  "cmd.error.args.group": "{0} is not a valid group.",
+
+  "cmd.player.info.usage": "Invalid usage, try this: /bp player info <player>",
+  "cmd.player.info": "Permissions of {0}: {1}",
+
+  "cmd.player.permission.add.usage": "Invalid usage, try this: /bp player permission add <player> <permission>",
+  "cmd.player.permission.add": "Added permission {0} to {1}.",
+
+  "cmd.player.group.list.usage": "Invalid usage, try this: /bp player group list <player>",
+  "cmd.player.group.list": "Groups of {0}: {1}",
+
+  "cmd.player.group.add.usage": "Invalid usage, try this: /bp player group add <player> <group>",
+  "cmd.player.group.add": "Added {0} to {1}.",
+
+  "cmd.player.group.remove.usage": "Invalid usage, try this: /bp player group remove <player> <group>",
+  "cmd.player.group.remove": "Removed {0} from {1}.",
+
+  "cmd.group.list": "List of groups: {0}",
+
+  "cmd.group.info.usage": "Invalid usage, try this: /bp group info <group>",
+  "cmd.group.info": "Permissions of {0}: {1}",
+
+  "cmd.group.add.usage": "Invalid usage, try this: /bp group add <name>",
+  "cmd.group.add.invalid": "The group {0} already exists.",
+  "cmd.group.add": "Added the group {0}.",
+
+  "cmd.group.remove.usage": "Invalid usage, try this: /bp group remove <group>",
+  "cmd.group.remove": "Removed the group {0}.",
+
+  "cmd.group.permission.add.usage": "Invalid usage, try this: /bp group permission add <group> <permission> <nbt>",
+  "cmd.group.permission.add": "Added {0} to {1}",
+
+  "cmd.group.permission.remove.usage": "Invalid usage, try this: /bp group permission remove <group> <permission>",
+  "cmd.group.permission.remove": "Removed {0} to {1}"
+
+}

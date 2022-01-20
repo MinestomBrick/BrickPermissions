@@ -1,13 +1,15 @@
 package com.gufli.brickpermissions.commands.group;
 
 import com.gufli.brickpermissions.BrickPermissionManager;
-import com.gufli.brickpermissions.commands.RootCommand;
-import com.gufli.brickpermissions.commands.group.permission.GroupPermissionRootCommand;
+import com.gufli.brickpermissions.commands.group.permission.GroupPermissionCommand;
+import com.gufli.brickutils.commands.BrickCommand;
 
-public class GroupRootCommand extends RootCommand {
+public class GroupCommand extends BrickCommand {
 
-    public GroupRootCommand(BrickPermissionManager permissionManager) {
+    public GroupCommand(BrickPermissionManager permissionManager) {
         super("group", "groups");
+
+        setupCommandGroupDefaults();
 
         addSubcommand(new GroupListCommand(permissionManager));
         addSubcommand(new GroupInfoCommand(permissionManager));
@@ -15,7 +17,7 @@ public class GroupRootCommand extends RootCommand {
         addSubcommand(new GroupAddCommand(permissionManager));
         addSubcommand(new GroupRemoveCommand(permissionManager));
 
-        addSubcommand(new GroupPermissionRootCommand(permissionManager));
+        addSubcommand(new GroupPermissionCommand(permissionManager));
     }
 
 }

@@ -1,14 +1,14 @@
 package com.gufli.brickpermissions.commands.player.group;
 
 import com.gufli.brickpermissions.BrickPermissionManager;
-import com.gufli.brickpermissions.commands.RootCommand;
-import com.gufli.brickpermissions.commands.player.permission.PlayerPermissionAddCommand;
-import com.gufli.brickpermissions.commands.player.permission.PlayerPermissionRemoveCommand;
+import com.gufli.brickutils.commands.BrickCommand;
 
-public class PlayerGroupRootCommand extends RootCommand {
+public class PlayerGroupCommand extends BrickCommand {
 
-    public PlayerGroupRootCommand(BrickPermissionManager permissionManager) {
+    public PlayerGroupCommand(BrickPermissionManager permissionManager) {
         super("group", "groups");
+
+        setupCommandGroupDefaults();
 
         addSubcommand(new PlayerGroupAddCommand(permissionManager));
         addSubcommand(new PlayerGroupRemoveCommand(permissionManager));

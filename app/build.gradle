@@ -15,7 +15,9 @@ dependencies {
 
     compileOnly 'com.github.Minestom:Minestom:1.18-SNAPSHOT'
 
-    implementation 'com.github.MinestomBrick:BrickDatabase:main-SNAPSHOT'
+    implementation 'com.gufli.brickutils:translation:1.0-SNAPSHOT'
+    implementation 'com.gufli.brickutils:database:1.0-SNAPSHOT'
+    implementation 'com.gufli.brickutils:commands:1.0-SNAPSHOT'
 
     compileOnly 'io.ebean:ebean:12.14.0'
     compileOnly 'io.ebean:ebean-ddl-generator:12.14.0'
@@ -43,10 +45,10 @@ shadowJar {
     archiveBaseName.set("${rootProject.name}")
     archiveVersion.set("${rootProject.version}")
 
-    doLast {
-        copy {
-            from "build/libs/" + archiveFileName.get()
-            into "../../server/extensions"
-        }
-    }
+//    doLast {
+//        copy {
+//            from "build/libs/" + archiveFileName.get()
+//            into "../../server/extensions"
+//        }
+//    }
 }

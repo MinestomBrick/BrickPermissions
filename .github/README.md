@@ -47,6 +47,34 @@ MySQL is supported, use the following format:
 "dsn": "jdbc:mysql://<hostname>:<ip>/<database>"
 ````
 
+## API
+
+
+```
+repositories {
+    maven { url "https://repo.jorisg.com/snapshots" }
+}
+
+dependencies {
+    implementation 'com.gufli.brickpermissions:api:1.0-SNAPSHOT'
+}
+```
+
+```
+// does not persist
+player.addPermission("super.cool.permission");
+
+// does persist
+PermissionAPI.addPermission(player, "super.cool.permission");
+
+PermissionAPI.addGroup("admin")
+    .thenCompose(group -> PermissionAPI.addPermission(group, "fly.mode"))
+    .thenCompose(ignore -> PermissionAPI.addGroup(player, group))
+```
+
+Note that the api returns completable futures. If you need to execute multiple operations
+on related objects, you have to wait for the previous operation to finish.
+
 ## Credits
 
 * The [Minestom](https://github.com/Minestom/Minestom) project

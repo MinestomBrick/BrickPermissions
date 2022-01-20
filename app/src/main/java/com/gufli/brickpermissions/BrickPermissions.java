@@ -2,10 +2,11 @@ package com.gufli.brickpermissions;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.gufli.brickpermissions.commands.BrickPermissionRootCommand;
+import com.gufli.brickpermissions.commands.BrickPermissionsCommand;
 import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
 import com.gufli.brickpermissions.listeners.PlayerJoinListener;
 import com.gufli.brickpermissions.listeners.PlayerQuitListener;
+import com.gufli.brickutils.translation.SimpleTranslationManager;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
 import net.minestom.server.command.builder.Command;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class BrickPermissions extends Extension {
@@ -59,8 +61,13 @@ public class BrickPermissions extends Extension {
         }
 
         permissionManager = new BrickPermissionManager(databaseContext);
+        PermissionAPI.setPermissionManager(permissionManager);
 
         Thread.currentThread().setContextClassLoader(originalContextClassLoader);
+
+        // TRANSLATIONS
+        SimpleTranslationManager tm = new SimpleTranslationManager(this, Locale.ENGLISH);
+        tm.loadTranslations(this, "languages");
 
         // EVENTS
         eventListeners.add(new PlayerJoinListener(permissionManager));
@@ -70,7 +77,7 @@ public class BrickPermissions extends Extension {
         eventListeners.forEach(geh::addListener);
 
         // COMMANDS
-        commands.add(new BrickPermissionRootCommand(permissionManager));
+        commands.add(new BrickPermissionsCommand(permissionManager));
 
         CommandManager gm = MinecraftServer.getCommandManager();
         commands.forEach(gm::register);

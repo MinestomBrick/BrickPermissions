@@ -1,8 +1,8 @@
 package com.gufli.brickpermissions.data;
 
-import com.gufli.brickdatabase.DatabaseContext;
 import com.gufli.brickpermissions.data.beans.*;
 import com.gufli.brickpermissions.data.converters.NBTConverter;
+import com.gufli.brickutils.database.DatabaseContext;
 import io.ebean.config.DatabaseConfig;
 
 public class BrickPermissionsDatabaseContext extends DatabaseContext {

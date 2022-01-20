@@ -1,7 +1,7 @@
 package com.gufli.brickpermissions.data.beans;
 
-import com.gufli.brickdatabase.BaseModel;
 import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
+import com.gufli.brickutils.database.BaseModel;
 import io.ebean.Model;
 import io.ebean.annotation.DbName;
 

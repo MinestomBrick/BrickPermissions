@@ -17,7 +17,6 @@ import net.minestom.server.extensions.Extension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -36,34 +35,33 @@ public class BrickPermissions extends Extension {
     public void initialize() {
         getLogger().info("Enabling " + nameAndVersion() + ".");
 
-        // DATABASE
-
-        // some things never change
-        ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-
+        // LOAD CONFIG
+        JsonObject config;
         try (
                 InputStream is = getResource("config.json");
                 InputStreamReader isr = new InputStreamReader(is);
         ) {
-            JsonObject config = JsonParser.parseReader(isr).getAsJsonObject();
-            config = config.get("database").getAsJsonObject();
-
-            databaseContext = new BrickPermissionsDatabaseContext();
-            databaseContext.init(
-                    config.get("dsn").getAsString(),
-                    config.get("username").getAsString(),
-                    config.get("password").getAsString()
-            );
-        } catch (IOException | SQLException e) {
+            config = JsonParser.parseReader(isr).getAsJsonObject().get("database").getAsJsonObject();
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }
 
-        permissionManager = new BrickPermissionManager(databaseContext);
-        PermissionAPI.setPermissionManager(permissionManager);
+        // INIT DATABASE
+        databaseContext = new BrickPermissionsDatabaseContext();
+        try {
+            databaseContext.withContextClassLoader(() -> {
+                databaseContext.init(config);
 
-        Thread.currentThread().setContextClassLoader(originalContextClassLoader);
+                permissionManager = new BrickPermissionManager(databaseContext);
+                PermissionAPI.setPermissionManager(permissionManager);
+
+                return null;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+        }
 
         // TRANSLATIONS
         SimpleTranslationManager tm = new SimpleTranslationManager(this, Locale.ENGLISH);

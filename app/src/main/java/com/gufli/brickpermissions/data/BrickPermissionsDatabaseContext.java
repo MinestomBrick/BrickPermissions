@@ -2,10 +2,10 @@ package com.gufli.brickpermissions.data;
 
 import com.gufli.brickpermissions.data.beans.*;
 import com.gufli.brickpermissions.data.converters.NBTConverter;
-import com.gufli.brickutils.database.DatabaseContext;
+import com.gufli.brickutils.database.context.AbstractDatabaseContext;
 import io.ebean.config.DatabaseConfig;
 
-public class BrickPermissionsDatabaseContext extends DatabaseContext {
+public class BrickPermissionsDatabaseContext extends AbstractDatabaseContext {
 
     public final static String DATASOURCE_NAME = "BrickPermissions";
 

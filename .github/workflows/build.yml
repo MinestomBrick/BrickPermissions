@@ -17,9 +17,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Test with Gradle
-          run: './gradlew test'
+        run: './gradlew test'
 
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,6 +39,7 @@ jobs:
           if-no-files-found: 'error'
 
   publish:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -47,8 +49,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Publish package
-          uses: gradle/gradle-build-action@v2
-          with:
-            arguments: publish
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publish
+        env:
+          ORG_GRADLE_PROJECT_JorisgUsername: ${{ secrets.JORISG_REPO_USERNAME }}
+          ORG_GRADLE_PROJECT_JorisgPassword: ${{ secrets.JORISG_REPO_PASSWORD }}

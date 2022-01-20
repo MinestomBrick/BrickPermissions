@@ -1,7 +1,7 @@
 package com.gufli.brickpermissions;
 
-import com.gufli.brickdatabase.migration.MigrationGenerator;
 import com.gufli.brickpermissions.data.BrickPermissionsDatabaseContext;
+import com.gufli.brickutils.database.migration.MigrationGenerator;
 import io.ebean.annotation.Platform;
 
 import java.io.IOException;

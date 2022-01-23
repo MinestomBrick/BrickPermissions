@@ -13,7 +13,7 @@ jar {
 dependencies {
     implementation project(':api')
 
-    compileOnly 'com.github.Minestom:Minestom:1.18-SNAPSHOT'
+    compileOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
 
     implementation 'com.gufli.brickutils:translation:1.0-SNAPSHOT'
     implementation 'com.gufli.brickutils:database:1.0-SNAPSHOT'
@@ -45,10 +45,10 @@ shadowJar {
     archiveBaseName.set("${rootProject.name}")
     archiveVersion.set("${rootProject.version}")
 
-//    doLast {
-//        copy {
-//            from "build/libs/" + archiveFileName.get()
-//            into "../../server/extensions"
-//        }
-//    }
+    doLast {
+        copy {
+            from "build/libs/" + archiveFileName.get()
+            into "../../server/extensions"
+        }
+    }
 }

@@ -28,7 +28,10 @@ dependencies {
     // TESTING
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+
     testImplementation 'com.github.Minestom:Minestom:-SNAPSHOT'
+    testImplementation 'org.minestombrick.ebean:api:1.0-SNAPSHOT'
+
     testImplementation 'io.ebean:ebean:12.14.0'
     testImplementation  'io.ebean:ebean-ddl-generator:12.14.0'
     testImplementation 'io.ebean:ebean-querybean:12.14.1'

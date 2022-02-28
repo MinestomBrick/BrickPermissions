@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.gufli.brickpermissions:api:1.0-SNAPSHOT'
+    implementation 'org.minestombrick.permissions:api:1.0-SNAPSHOT'
 }
 ```
 

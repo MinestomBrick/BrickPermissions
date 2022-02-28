@@ -6,7 +6,7 @@ database server or a local H2 file database.
 
 ## Install
 
-Get the [release](./releases)
+Get the [release](https://github.com/MinestomBrick/BrickPermissions/releases)
 and place it in the extension folder of your minestom server.
 
 ### Dependencies

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.minestombrick.permissions.api.data","l":"Group"},{"p":"org.minestombrick.permissions.api","l":"PermissionAPI"},{"p":"org.minestombrick.permissions.api","l":"PermissionManager"}];updateSearchResults();

@@ -13,6 +13,9 @@
   "cmd.player.permission.add.usage": "Invalid usage, try this: /bp player permission add <player> <permission>",
   "cmd.player.permission.add": "Added permission {0} to {1}.",
 
+  "cmd.player.permission.remove.usage": "Invalid usage, try this: /bp player permission remove <player> <permission>",
+  "cmd.player.permission.remove": "Removed permission {0} from {1}.",
+
   "cmd.player.group.list.usage": "Invalid usage, try this: /bp player group list <player>",
   "cmd.player.group.list": "Groups of {0}: {1}",
 

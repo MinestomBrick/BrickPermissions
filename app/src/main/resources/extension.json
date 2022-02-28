@@ -1,17 +1,31 @@
 {
-  "entrypoint": "com.gufli.brickpermissions.BrickPermissions",
+  "entrypoint": "org.minestombrick.permissions.app.BrickPermissions",
   "name": "BrickPermissions",
   "version": "1.0.0",
+  "dependencies": [
+    "BrickI18n"
+  ],
   "externalDependencies": {
     "repositories": [
-      {"name": "Central", "url": "https://repo1.maven.org/maven2/"}
+      {
+        "name": "Central",
+        "url": "https://repo1.maven.org/maven2/"
+      },
+      {
+        "name": "jorisg",
+        "url": "https://repo.jorisg.com/snapshots"
+      }
     ],
     "artifacts": [
-      "io.ebean:ebean:12.14.0",
-      "io.ebean:ebean-ddl-generator:12.14.0",
-      "io.ebean:ebean-querybean:12.14.0",
-      "com.h2database:h2:2.0.204",
-      "mysql:mysql-connector-java:8.0.27"
+      "io.ebean:ebean:12.14.1",
+      "io.ebean:ebean-ddl-generator:12.14.1",
+      "io.ebean:ebean-querybean:12.14.1",
+
+      "com.h2database:h2:2.1.210",
+      "mysql:mysql-connector-java:8.0.27",
+
+      "org.minestombrick.ebean:api:1.0-SNAPSHOT",
+      "org.minestombrick.commandtools:api:1.0-SNAPSHOT"
     ]
   }
 }

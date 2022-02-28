@@ -6,8 +6,11 @@ database server or a local H2 file database.
 
 ## Install
 
-Get the latest jar file from [Github actions](https://github.com/MinestomBrick/BrickPermissions/actions) 
+Get the [release](./releases)
 and place it in the extension folder of your minestom server.
+
+### Dependencies
+* [BrickI18n](https://github.com/MinestomBrick/BrickI18n)
 
 ## Commands
 
@@ -49,7 +52,7 @@ MySQL is supported, use the following format:
 
 ## API
 
-
+### Maven
 ```
 repositories {
     maven { url "https://repo.jorisg.com/snapshots" }
@@ -60,26 +63,23 @@ dependencies {
 }
 ```
 
+### Usage
+
+Check the [javadocs](https://minestombrick.github.io/BrickPermissions/)
+
+#### Examples
+
 ```
 // does not persist
 player.addPermission("super.cool.permission");
 
 // does persist
-PermissionAPI.addPermission(player, "super.cool.permission");
+PermissionAPI.get().addPermission(player, "super.cool.permission");
 
-PermissionAPI.addGroup("admin")
+PermissionAPI.get().addGroup("admin")
     .thenCompose(group -> PermissionAPI.addPermission(group, "fly.mode"))
-    .thenCompose(ignore -> PermissionAPI.addGroup(player, group))
+    .thenCompose(v -> PermissionAPI.addGroup(player, group))
 ```
 
 Note that the api returns completable futures. If you need to execute multiple operations
 on related objects, you have to wait for the previous operation to finish.
-
-## Credits
-
-* The [Minestom](https://github.com/Minestom/Minestom) project
-
-## Contributing
-
-Check our [contributing info](CONTRIBUTING.md)
-
